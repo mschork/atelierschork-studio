@@ -10,7 +10,8 @@ import {
   BsBrush,
   BsFolder,
   BsGeoFill,
-  BsTag
+  BsTag,
+  BsPersonBadge
 } from 'react-icons/bs'
 
 const deskStructure: StructureResolver = (S) => {
@@ -68,6 +69,10 @@ const deskStructure: StructureResolver = (S) => {
         .title('Tag')
         .icon(BsTag)
         .child(S.documentTypeList('tag').title('Tags')),
+      S.listItem()
+        .title('Role')
+        .icon(BsPersonBadge)
+        .child(S.documentTypeList('role').title('Roles')),
     ])
 }
 

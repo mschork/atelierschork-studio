@@ -228,14 +228,19 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      creator0: 'creators.0.name',
+      creator0: 'creators.0.firstName',
+      creatorLast0: 'creators.0.lastName',
+      creatorRole0: 'creators.0.roles.0.title',
       media: 'mainImage',
     },
     prepare(selection) {
-      const {title, creator0, media} = selection
+      const {title, creator0, creatorLast0, creatorRole0, media} = selection
+      const creatorName = creator0 && creatorLast0 ? `${creator0} ${creatorLast0}` : creator0 || creatorLast0 || ''
+      const subtitle = creatorName ? `by ${creatorName}${creatorRole0 ? ` (${creatorRole0})` : ''}` : ''
+      
       return {
         title,
-        subtitle: creator0 ? `by ${creator0}` : '',
+        subtitle,
         media,
       }
     },

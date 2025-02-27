@@ -8,6 +8,7 @@ import tag from './tag'
 import medium from './medium'
 import technique from './technique'
 import locationType from './locationType'
+import role from './role'
 
 export const schemaTypes = [
   // Content types
@@ -23,4 +24,5 @@ export const schemaTypes = [
   medium,
   technique,
   locationType,
+  role,
 ]
