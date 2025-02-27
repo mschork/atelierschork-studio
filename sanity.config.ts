@@ -4,8 +4,8 @@ import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 import deskStructure from './deskStructure'
 
-// Use environment variables with fallbacks for safety
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-project-id-here'
+// Use environment variables
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID || ''
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 
 export default defineConfig({
