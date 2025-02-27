@@ -1,15 +1,44 @@
 import {defineField, defineType} from 'sanity'
+import {BsFileEarmarkText} from 'react-icons/bs'
 
 export default defineType({
   name: 'project',
   title: 'Project',
   type: 'document',
+  icon: BsFileEarmarkText,
+  groups: [
+    {
+      name: 'basic',
+      title: 'Basic Information',
+    },
+    {
+      name: 'details',
+      title: 'Project Details',
+    },
+    {
+      name: 'people',
+      title: 'People',
+    },
+    {
+      name: 'media',
+      title: 'Media',
+    },
+    {
+      name: 'classification',
+      title: 'Classification',
+    },
+    {
+      name: 'related',
+      title: 'Related Content',
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      group: 'basic',
     }),
     defineField({
       name: 'slug',
@@ -20,54 +49,14 @@ export default defineType({
         maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
+      group: 'basic',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'array',
       of: [{type: 'block'}],
-    }),
-    defineField({
-      name: 'startDate',
-      title: 'Start Date',
-      type: 'date',
-      options: {
-        dateFormat: 'YYYY-MM-DD',
-      },
-    }),
-    defineField({
-      name: 'endDate',
-      title: 'End Date',
-      type: 'date',
-      options: {
-        dateFormat: 'YYYY-MM-DD',
-      },
-    }),
-    defineField({
-      name: 'status',
-      title: 'Status',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'In Progress', value: 'inProgress'},
-          {title: 'Completed', value: 'completed'},
-          {title: 'Cancelled', value: 'cancelled'},
-        ],
-        layout: 'radio',
-      },
-    }),
-    defineField({
-      name: 'creators',
-      title: 'Creators',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'person'}]}],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'collaborators',
-      title: 'Collaborators',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'person'}]}],
+      group: 'basic',
     }),
     defineField({
       name: 'mainImage',
@@ -88,6 +77,54 @@ export default defineType({
           title: 'Alternative text',
         },
       ],
+      group: 'basic',
+    }),
+    defineField({
+      name: 'startDate',
+      title: 'Start Date',
+      type: 'date',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+      },
+      group: 'details',
+    }),
+    defineField({
+      name: 'endDate',
+      title: 'End Date',
+      type: 'date',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+      },
+      group: 'details',
+    }),
+    defineField({
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'In Progress', value: 'inProgress'},
+          {title: 'Completed', value: 'completed'},
+          {title: 'Cancelled', value: 'cancelled'},
+        ],
+        layout: 'radio',
+      },
+      group: 'details',
+    }),
+    defineField({
+      name: 'creators',
+      title: 'Creators',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'person'}]}],
+      validation: (Rule) => Rule.required(),
+      group: 'people',
+    }),
+    defineField({
+      name: 'collaborators',
+      title: 'Collaborators',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'person'}]}],
+      group: 'people',
     }),
     defineField({
       name: 'gallery',
@@ -113,6 +150,7 @@ export default defineType({
           ],
         },
       ],
+      group: 'media',
     }),
     defineField({
       name: 'videos',
@@ -140,6 +178,7 @@ export default defineType({
           ],
         },
       ],
+      group: 'media',
     }),
     defineField({
       name: 'documents',
@@ -162,24 +201,28 @@ export default defineType({
           ],
         },
       ],
+      group: 'media',
     }),
     defineField({
       name: 'categories',
       title: 'Categories',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'category'}]}],
+      group: 'classification',
     }),
     defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'tag'}]}],
+      group: 'classification',
     }),
     defineField({
       name: 'relatedProjects',
       title: 'Related Projects',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'project'}]}],
+      group: 'related',
     }),
   ],
   preview: {

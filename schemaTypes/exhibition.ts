@@ -1,15 +1,44 @@
 import {defineField, defineType} from 'sanity'
+import {BsBuilding} from 'react-icons/bs'
 
 export default defineType({
   name: 'exhibition',
   title: 'Exhibition',
   type: 'document',
+  icon: BsBuilding,
+  groups: [
+    {
+      name: 'basic',
+      title: 'Basic Information',
+    },
+    {
+      name: 'details',
+      title: 'Exhibition Details',
+    },
+    {
+      name: 'content',
+      title: 'Exhibition Content',
+    },
+    {
+      name: 'media',
+      title: 'Media',
+    },
+    {
+      name: 'press',
+      title: 'Press & Reviews',
+    },
+    {
+      name: 'classification',
+      title: 'Classification',
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      group: 'basic',
     }),
     defineField({
       name: 'slug',
@@ -20,54 +49,14 @@ export default defineType({
         maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
+      group: 'basic',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'array',
       of: [{type: 'block'}],
-    }),
-    defineField({
-      name: 'startDate',
-      title: 'Start Date',
-      type: 'date',
-      options: {
-        dateFormat: 'YYYY-MM-DD',
-      },
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'endDate',
-      title: 'End Date',
-      type: 'date',
-      options: {
-        dateFormat: 'YYYY-MM-DD',
-      },
-    }),
-    defineField({
-      name: 'location',
-      title: 'Location',
-      type: 'reference',
-      to: [{type: 'location'}],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'curators',
-      title: 'Curator(s)',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'person'}]}],
-    }),
-    defineField({
-      name: 'featuredProjects',
-      title: 'Featured Projects',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'project'}]}],
-    }),
-    defineField({
-      name: 'featuredArtworks',
-      title: 'Featured Artworks',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'artwork'}]}],
+      group: 'basic',
     }),
     defineField({
       name: 'mainImage',
@@ -88,6 +77,55 @@ export default defineType({
           title: 'Alternative text',
         },
       ],
+      group: 'basic',
+    }),
+    defineField({
+      name: 'startDate',
+      title: 'Start Date',
+      type: 'date',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+      },
+      validation: (Rule) => Rule.required(),
+      group: 'details',
+    }),
+    defineField({
+      name: 'endDate',
+      title: 'End Date',
+      type: 'date',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+      },
+      group: 'details',
+    }),
+    defineField({
+      name: 'location',
+      title: 'Location',
+      type: 'reference',
+      to: [{type: 'location'}],
+      validation: (Rule) => Rule.required(),
+      group: 'details',
+    }),
+    defineField({
+      name: 'curators',
+      title: 'Curator(s)',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'person'}]}],
+      group: 'details',
+    }),
+    defineField({
+      name: 'featuredProjects',
+      title: 'Featured Projects',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'project'}]}],
+      group: 'content',
+    }),
+    defineField({
+      name: 'featuredArtworks',
+      title: 'Featured Artworks',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'artwork'}]}],
+      group: 'content',
     }),
     defineField({
       name: 'gallery',
@@ -113,6 +151,7 @@ export default defineType({
           ],
         },
       ],
+      group: 'media',
     }),
     defineField({
       name: 'press',
@@ -161,12 +200,14 @@ export default defineType({
           ],
         },
       ],
+      group: 'press',
     }),
     defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'tag'}]}],
+      group: 'classification',
     }),
   ],
   preview: {

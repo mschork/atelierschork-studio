@@ -1,15 +1,44 @@
 import {defineField, defineType} from 'sanity'
+import {BsPalette} from 'react-icons/bs'
 
 export default defineType({
   name: 'artwork',
   title: 'Artwork',
   type: 'document',
+  icon: BsPalette,
+  groups: [
+    {
+      name: 'basic',
+      title: 'Basic Information',
+    },
+    {
+      name: 'details',
+      title: 'Artwork Details',
+    },
+    {
+      name: 'media',
+      title: 'Media',
+    },
+    {
+      name: 'location',
+      title: 'Location',
+    },
+    {
+      name: 'classification',
+      title: 'Classification',
+    },
+    {
+      name: 'related',
+      title: 'Related Content',
+    },
+  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
+      group: 'basic',
     }),
     defineField({
       name: 'slug',
@@ -20,12 +49,22 @@ export default defineType({
         maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
+      group: 'basic',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'array',
       of: [{type: 'block'}],
+      group: 'basic',
+    }),
+    defineField({
+      name: 'creators',
+      title: 'Creator(s)',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'person'}]}],
+      validation: (Rule) => Rule.required(),
+      group: 'basic',
     }),
     defineField({
       name: 'creationDate',
@@ -34,30 +73,27 @@ export default defineType({
       options: {
         dateFormat: 'YYYY-MM-DD',
       },
+      group: 'details',
     }),
     defineField({
       name: 'medium',
       title: 'Medium/Materials',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'medium'}]}],
+      group: 'details',
     }),
     defineField({
       name: 'dimensions',
       title: 'Dimensions',
       type: 'string',
+      group: 'details',
     }),
     defineField({
-      name: 'creators',
-      title: 'Creator(s)',
+      name: 'techniques',
+      title: 'Techniques',
       type: 'array',
-      of: [{type: 'reference', to: [{type: 'person'}]}],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'project',
-      title: 'Parent Project',
-      type: 'reference',
-      to: [{type: 'project'}],
+      of: [{type: 'reference', to: [{type: 'technique'}]}],
+      group: 'details',
     }),
     defineField({
       name: 'images',
@@ -83,6 +119,7 @@ export default defineType({
           ],
         },
       ],
+      group: 'media',
     }),
     defineField({
       name: 'currentLocation',
@@ -109,24 +146,28 @@ export default defineType({
           hidden: ({parent}) => parent?.locationType === 'privateCollection' || parent?.locationType === 'artistCollection',
         },
       ],
-    }),
-    defineField({
-      name: 'techniques',
-      title: 'Techniques',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'technique'}]}],
+      group: 'location',
     }),
     defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'tag'}]}],
+      group: 'classification',
+    }),
+    defineField({
+      name: 'project',
+      title: 'Parent Project',
+      type: 'reference',
+      to: [{type: 'project'}],
+      group: 'related',
     }),
     defineField({
       name: 'relatedArtworks',
       title: 'Related Artworks',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'artwork'}]}],
+      group: 'related',
     }),
   ],
   preview: {
