@@ -1,0 +1,70 @@
+{
+  "backupDate": "2025-11-17T00:00:00.000Z",
+  "documentType": "person",
+  "totalDocuments": 3,
+  "documents": [
+    {
+      "_createdAt": "2025-02-27T10:25:30Z",
+      "_id": "0cdee811-8f95-442d-ae12-d47d133959e7",
+      "_type": "person",
+      "_updatedAt": "2025-02-27T10:26:03Z",
+      "bio": null,
+      "email": null,
+      "firstName": "Émilie",
+      "image": null,
+      "lastName": "Queney",
+      "middleName": "Andrée Simone",
+      "phone": null,
+      "roles": [
+        {
+          "_key": "719d84866c75",
+          "_ref": "19da0984-3e78-46d8-9182-74bc44fa1c1e",
+          "_type": "reference"
+        }
+      ],
+      "socialMedia": null
+    },
+    {
+      "_createdAt": "2025-02-27T10:15:40Z",
+      "_id": "13384ffd-86fa-41fd-af89-3f3c54d4c23f",
+      "_type": "person",
+      "_updatedAt": "2025-02-27T10:24:30Z",
+      "bio": null,
+      "email": null,
+      "firstName": "Markus",
+      "image": null,
+      "lastName": "Schork",
+      "middleName": "Roberto",
+      "phone": null,
+      "roles": [
+        {
+          "_key": "f7a48215214b",
+          "_ref": "d382308e-e877-443e-a4c8-9a2cc341e608",
+          "_type": "reference"
+        }
+      ],
+      "socialMedia": null
+    },
+    {
+      "_createdAt": "2025-02-27T10:24:56Z",
+      "_id": "d18786be-d29f-40d1-8605-b728a82f8eeb",
+      "_type": "person",
+      "_updatedAt": "2025-02-27T10:25:13Z",
+      "bio": null,
+      "email": null,
+      "firstName": "Francisco",
+      "image": null,
+      "lastName": "Schork",
+      "middleName": "Valentin",
+      "phone": null,
+      "roles": [
+        {
+          "_key": "def1ce52af3e",
+          "_ref": "d382308e-e877-443e-a4c8-9a2cc341e608",
+          "_type": "reference"
+        }
+      ],
+      "socialMedia": null
+    }
+  ]
+}
