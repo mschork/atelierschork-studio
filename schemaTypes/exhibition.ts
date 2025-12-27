@@ -16,8 +16,16 @@ export default defineType({
       title: 'Exhibition Details',
     },
     {
+      name: 'location',
+      title: 'Dates & Location',
+    },
+    {
       name: 'content',
       title: 'Exhibition Content',
+    },
+    {
+      name: 'resources',
+      title: 'Resources',
     },
     {
       name: 'media',
@@ -28,11 +36,12 @@ export default defineType({
       title: 'Press & Reviews',
     },
     {
-      name: 'classification',
-      title: 'Classification',
+      name: 'meta',
+      title: 'Meta',
     },
   ],
   fields: [
+    // Basic Information
     defineField({
       name: 'title',
       title: 'Title',
@@ -80,6 +89,62 @@ export default defineType({
       group: 'basic',
     }),
     defineField({
+      name: 'type',
+      title: 'Exhibition Type',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Solo', value: 'solo'},
+          {title: 'Group', value: 'group'},
+        ],
+        layout: 'radio',
+      },
+      validation: (Rule) => Rule.required(),
+      group: 'basic',
+    }),
+    defineField({
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Upcoming', value: 'upcoming'},
+          {title: 'Current', value: 'current'},
+          {title: 'Past', value: 'past'},
+        ],
+        layout: 'radio',
+      },
+      description: 'Can be auto-calculated based on dates',
+      group: 'basic',
+    }),
+
+    // Exhibition Details
+    defineField({
+      name: 'curatedBy',
+      title: 'Curated By',
+      type: 'string',
+      description: 'Curator name(s) as text',
+      group: 'details',
+    }),
+    defineField({
+      name: 'curators',
+      title: 'Curator(s)',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'person'}]}],
+      description: 'Curators as person references (if in system)',
+      group: 'details',
+    }),
+    defineField({
+      name: 'participants',
+      title: 'Participants',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'person'}]}],
+      description: 'For group shows - all participating people',
+      group: 'details',
+    }),
+
+    // Dates & Location
+    defineField({
       name: 'startDate',
       title: 'Start Date',
       type: 'date',
@@ -87,7 +152,7 @@ export default defineType({
         dateFormat: 'YYYY-MM-DD',
       },
       validation: (Rule) => Rule.required(),
-      group: 'details',
+      group: 'location',
     }),
     defineField({
       name: 'endDate',
@@ -96,36 +161,78 @@ export default defineType({
       options: {
         dateFormat: 'YYYY-MM-DD',
       },
-      group: 'details',
+      group: 'location',
+    }),
+    defineField({
+      name: 'venue',
+      title: 'Venue',
+      type: 'string',
+      description: 'Venue name as plain text',
+      group: 'location',
+    }),
+    defineField({
+      name: 'city',
+      title: 'City',
+      type: 'string',
+      group: 'location',
+    }),
+    defineField({
+      name: 'country',
+      title: 'Country',
+      type: 'string',
+      group: 'location',
     }),
     defineField({
       name: 'location',
-      title: 'Location',
+      title: 'Location (Structured)',
       type: 'reference',
       to: [{type: 'location'}],
-      validation: (Rule) => Rule.required(),
-      group: 'details',
+      description: 'Rich venue data (optional - use venue/city/country for simple cases)',
+      group: 'location',
     }),
+
+    // Content
     defineField({
-      name: 'curators',
-      title: 'Curator(s)',
+      name: 'artworks',
+      title: 'Artworks',
       type: 'array',
-      of: [{type: 'reference', to: [{type: 'person'}]}],
-      group: 'details',
+      of: [{type: 'reference', to: [{type: 'artwork'}]}],
+      description: 'Artworks featured in this exhibition',
+      group: 'content',
     }),
     defineField({
       name: 'featuredProjects',
       title: 'Featured Projects',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'project'}]}],
+      description: 'Legacy field - consider using Collections',
       group: 'content',
     }),
+
+    // Resources
     defineField({
-      name: 'featuredArtworks',
-      title: 'Featured Artworks',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'artwork'}]}],
-      group: 'content',
+      name: 'catalogUrl',
+      title: 'Catalog URL',
+      type: 'url',
+      description: 'Link to online catalog',
+      group: 'resources',
+    }),
+    defineField({
+      name: 'pressRelease',
+      title: 'Press Release',
+      type: 'file',
+      description: 'Upload press release PDF',
+      options: {
+        accept: '.pdf',
+      },
+      group: 'resources',
+    }),
+    defineField({
+      name: 'website',
+      title: 'Website',
+      type: 'url',
+      description: 'Exhibition website',
+      group: 'resources',
     }),
     defineField({
       name: 'gallery',
@@ -202,12 +309,21 @@ export default defineType({
       ],
       group: 'press',
     }),
+    // Meta
+    defineField({
+      name: 'isFeatured',
+      title: 'Featured',
+      type: 'boolean',
+      description: 'Feature this exhibition prominently',
+      initialValue: false,
+      group: 'meta',
+    }),
     defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'tag'}]}],
-      group: 'classification',
+      group: 'meta',
     }),
   ],
   preview: {

@@ -2,8 +2,8 @@ import {defineField, defineType} from 'sanity'
 import {BsPerson} from 'react-icons/bs'
 
 export default defineType({
-  name: 'person',
-  title: 'Person',
+  name: 'artist',
+  title: 'Artist',
   type: 'document',
   icon: BsPerson,
   groups: [
@@ -95,6 +95,7 @@ export default defineType({
     }),
     defineField({
       name: 'isCoreArtist',
+      title: 'Core Artist',
       type: 'boolean',
       description: 'Is this a core member of Atelier Schork? (Francisco & Markus)',
       initialValue: false,
@@ -340,6 +341,7 @@ export default defineType({
       // Add core artist indicator
       const subtitle = [
         role0,
+        isCoreArtist ? '⭐ Core Artist' : null,
       ]
         .filter(Boolean)
         .join(' • ')

@@ -13,7 +13,7 @@ export default defineType({
     },
     {
       name: 'details',
-      title: 'Details',
+      title: 'Project Details',
     },
     {
       name: 'people',
@@ -27,9 +27,12 @@ export default defineType({
       name: 'classification',
       title: 'Classification',
     },
+    {
+      name: 'related',
+      title: 'Related Content',
+    },
   ],
   fields: [
-    // Basic Information
     defineField({
       name: 'title',
       title: 'Title',
@@ -56,47 +59,42 @@ export default defineType({
       group: 'basic',
     }),
     defineField({
-      name: 'isOngoing',
-      title: 'Ongoing',
-      type: 'boolean',
-      description: 'Is this project currently ongoing?',
-      initialValue: false,
+      name: 'mainImage',
+      title: 'Main Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        {
+          name: 'caption',
+          type: 'string',
+          title: 'Caption',
+        },
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative text',
+        },
+      ],
       group: 'basic',
     }),
-
-    // Details
     defineField({
-      name: 'startYear',
-      title: 'Start Year',
-      type: 'number',
-      validation: (Rule) =>
-        Rule.integer()
-          .min(1900)
-          .max(new Date().getFullYear() + 1),
+      name: 'startDate',
+      title: 'Start Date',
+      type: 'date',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+      },
       group: 'details',
     }),
     defineField({
-      name: 'endYear',
-      title: 'End Year',
-      type: 'number',
-      validation: (Rule) =>
-        Rule.integer()
-          .min(1900)
-          .max(new Date().getFullYear() + 1)
-          .custom((endYear, context) => {
-            const startYear = (context.document as any)?.startYear
-            const isOngoing = (context.document as any)?.isOngoing
-
-            if (isOngoing) {
-              return true // No validation needed if ongoing
-            }
-
-            if (endYear && startYear && endYear < startYear) {
-              return 'End year must be equal to or after start year'
-            }
-            return true
-          }),
-      hidden: ({document}) => document?.isOngoing === true,
+      name: 'endDate',
+      title: 'End Date',
+      type: 'date',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+      },
       group: 'details',
     }),
     defineField({
@@ -113,13 +111,12 @@ export default defineType({
       },
       group: 'details',
     }),
-
-    // People
     defineField({
       name: 'creators',
       title: 'Creators',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'person'}]}],
+      validation: (Rule) => Rule.required(),
       group: 'people',
     }),
     defineField({
@@ -128,29 +125,6 @@ export default defineType({
       type: 'array',
       of: [{type: 'reference', to: [{type: 'person'}]}],
       group: 'people',
-    }),
-
-    // Media
-    defineField({
-      name: 'coverImage',
-      title: 'Cover Image',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alternative Text',
-          type: 'string',
-        },
-        {
-          name: 'caption',
-          title: 'Caption',
-          type: 'string',
-        },
-      ],
-      group: 'media',
     }),
     defineField({
       name: 'gallery',
@@ -178,14 +152,62 @@ export default defineType({
       ],
       group: 'media',
     }),
-
-    // Classification
     defineField({
-      name: 'projectType',
-      title: 'Project Type',
-      type: 'reference',
-      to: [{type: 'projectType'}],
-      description: 'Type of project (Art, Logo Design, Website Design, etc.)',
+      name: 'videos',
+      title: 'Videos',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+            },
+            {
+              name: 'url',
+              title: 'URL',
+              type: 'url',
+            },
+            {
+              name: 'description',
+              title: 'Description',
+              type: 'text',
+            },
+          ],
+        },
+      ],
+      group: 'media',
+    }),
+    defineField({
+      name: 'documents',
+      title: 'Documents',
+      type: 'array',
+      of: [
+        {
+          type: 'file',
+          fields: [
+            {
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+            },
+            {
+              name: 'description',
+              title: 'Description',
+              type: 'text',
+            },
+          ],
+        },
+      ],
+      group: 'media',
+    }),
+    defineField({
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'category'}]}],
       group: 'classification',
     }),
     defineField({
@@ -195,29 +217,27 @@ export default defineType({
       of: [{type: 'reference', to: [{type: 'tag'}]}],
       group: 'classification',
     }),
+    defineField({
+      name: 'relatedProjects',
+      title: 'Related Projects',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'project'}]}],
+      group: 'related',
+    }),
   ],
   preview: {
     select: {
       title: 'title',
-      startYear: 'startYear',
-      endYear: 'endYear',
-      isOngoing: 'isOngoing',
-      media: 'coverImage',
       creator0: 'creators.0.firstName',
       creatorLast0: 'creators.0.lastName',
+      creatorRole0: 'creators.0.roles.0.title',
+      media: 'mainImage',
     },
-    prepare({title, startYear, endYear, isOngoing, media, creator0, creatorLast0}) {
-      const yearRange = isOngoing
-        ? `${startYear || '?'} - Ongoing`
-        : startYear && endYear
-        ? `${startYear} - ${endYear}`
-        : startYear
-        ? `${startYear}`
-        : 'No dates'
-
+    prepare(selection) {
+      const {title, creator0, creatorLast0, creatorRole0, media} = selection
       const creatorName = creator0 && creatorLast0 ? `${creator0} ${creatorLast0}` : creator0 || creatorLast0 || ''
-      const subtitle = creatorName ? `${yearRange} • ${creatorName}` : yearRange
-
+      const subtitle = creatorName ? `by ${creatorName}${creatorRole0 ? ` (${creatorRole0})` : ''}` : ''
+      
       return {
         title,
         subtitle,
@@ -225,4 +245,4 @@ export default defineType({
       }
     },
   },
-})
+}) 
