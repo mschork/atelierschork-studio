@@ -1,78 +1,117 @@
 // deskStructure.ts
 import type {StructureResolver} from 'sanity/structure'
 import {
-  BsFileEarmarkText, 
-  BsPalette, 
-  BsBuilding, 
-  BsPerson, 
+  BsPalette,
+  BsBuilding,
+  BsPerson,
   BsGeoAlt,
   BsDroplet,
   BsBrush,
   BsFolder,
   BsGeoFill,
   BsTag,
-  BsPersonBadge
+  BsPersonBadge,
+  BsCollection,
+  BsTrophy,
+  BsGear,
+  BsGrid
 } from 'react-icons/bs'
 
-const deskStructure: StructureResolver = (S) => {
+const deskStructure: StructureResolver = async (S, context) => {
+  // Fetch all project types to create dynamic list items
+  const projectTypes = await context
+    .getClient({apiVersion: '2024-01-01'})
+    .fetch(`*[_type == "projectType"] | order(title asc) {_id, title, icon}`)
+
   return S.list()
     .title('Content')
     .items([
-      // Projects & Artworks Group
+      // Work Section
+      //S.divider().title('Work'),
       S.listItem()
-        .title('Project')
-        .icon(BsFileEarmarkText)
+        .title('Projects')
+        .icon(BsCollection)
         .child(S.documentTypeList('project').title('Projects')),
+
+      // Dynamically create list items for each project type (no icons for visual hierarchy)
+      ...projectTypes.map((type: {_id: string; title: string; icon?: string}) =>
+        S.listItem()
+          .title(type.title)
+          .child(
+            S.documentList()
+              .apiVersion('2024-01-01')
+              .title(`${type.title} Projects`)
+              .schemaType('project')
+              .filter('_type == "project" && projectType._ref == $typeId')
+              .params({typeId: type._id})
+          )
+      ),
+
       S.listItem()
-        .title('Artwork')
+        .title('Artworks')
         .icon(BsPalette)
         .child(S.documentTypeList('artwork').title('Artworks')),
       S.listItem()
-        .title('Exhibition')
+        .title('Exhibitions')
         .icon(BsBuilding)
         .child(S.documentTypeList('exhibition').title('Exhibitions')),
-      
-      // Divider
-      S.divider(),
-      
-      // People & Locations Group
       S.listItem()
-        .title('Person')
+        .title('Awards')
+        .icon(BsTrophy)
+        .child(S.documentTypeList('award').title('Awards')),
+
+      // People Section
+      S.divider().title('People'),
+      S.listItem()
+        .title('People')
         .icon(BsPerson)
         .child(S.documentTypeList('person').title('People')),
       S.listItem()
-        .title('Location')
-        .icon(BsGeoAlt)
-        .child(S.documentTypeList('location').title('Locations')),
-      
-      // Divider
-      S.divider(),
-      
-      // Taxonomies Group
+        .title('Roles')
+        .icon(BsPersonBadge)
+        .child(S.documentTypeList('role').title('Roles')),
+
+      // Taxonomies Section
+      S.divider().title('Taxonomies'),
       S.listItem()
-        .title('Medium')
+        .title('Media Types')
         .icon(BsDroplet)
-        .child(S.documentTypeList('medium').title('Media')),
+        .child(S.documentTypeList('mediaType').title('Media Types')),
       S.listItem()
-        .title('Technique')
+        .title('Techniques')
         .icon(BsBrush)
         .child(S.documentTypeList('technique').title('Techniques')),
       S.listItem()
-        .title('Category')
-        .icon(BsFolder)
-        .child(S.documentTypeList('category').title('Categories')),
-      S.listItem()
-        .title('Location Type')
-        .icon(BsGeoFill)
-        .child(S.documentTypeList('locationType').title('Location Types')),
-      S.listItem()
-        .title('Tag')
+        .title('Tags')
         .icon(BsTag)
         .child(S.documentTypeList('tag').title('Tags')),
       S.listItem()
-        .title('Role')
-        .icon(BsPersonBadge)
-        .child(S.documentTypeList('role').title('Roles')),
+        .title('Categories')
+        .icon(BsFolder)
+        .child(S.documentTypeList('category').title('Categories')),
+      S.listItem()
+        .title('Project Types')
+        .icon(BsGrid)
+        .child(S.documentTypeList('projectType').title('Project Types')),
+      S.listItem()
+        .title('Locations')
+        .icon(BsGeoAlt)
+        .child(S.documentTypeList('location').title('Locations')),
+      S.listItem()
+        .title('Location Types')
+        .icon(BsGeoFill)
+        .child(S.documentTypeList('locationType').title('Location Types')),
+
+      // Website Settings Section
+      S.divider().title('Website Settings'),
+      S.listItem()
+        .title('Site Settings')
+        .icon(BsGear)
+        .child(
+          S.document()
+            .schemaType('siteSettings')
+            .documentId('siteSettings')
+        ),
     ])
 }
 
